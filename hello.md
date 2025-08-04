@@ -147,6 +147,25 @@ root.render(React.createElement(App));
 
 ---
 
+🧪 Bonus: Why Are react and react-dom Separate?
+React isn’t just made for websites — it's designed to power user interfaces across many platforms:
+
+🖥️ Web → uses react-dom
+
+📱 Mobile → uses react-native
+
+🕶️ Virtual Reality → uses react-vr (now part of React 360)
+
+✉️ Emails → uses react-email
+
+Each of these platforms has its own renderer, responsible for turning components into something users can interact with.
+
+But here’s the trick: they all rely on the same react core — the logic, components, state, and hooks stay the same.
+That’s why React is split into two libraries:
+🧠 react = the brain (UI logic)
+🖼️ react-dom = the painter (renders to the web)
+
+
 ## 💡 JSX Version for Comparison
 
 ```jsx
