@@ -135,11 +135,11 @@ const App = () => {
       <h1>Pixel Perfect Pizzas</h1>
     </div>
   );
+```
 
 
 
 
-```js
 // UserProfileCard component using React.createElement
 const UserProfileCard = (props) => {
   // The 'return' statement describes the UI structure for this component.
@@ -181,8 +181,8 @@ const UserProfileCard = (props) => {
     )
   );
 };
-```
+
 };
-```
+
 
 ---
