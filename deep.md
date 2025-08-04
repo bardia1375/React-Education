@@ -185,7 +185,7 @@ const UserProfileCard = (props) => {
 };
 ```
 
----
+
 ```js
 // Example data for the user profile
 const userData = {
@@ -206,4 +206,39 @@ const root = ReactDOM.createRoot(container);
 //    Here, we pass the 'userData' object as props to our UserProfileCard component.
 //    React.createElement is used again to create an instance of our component.
 root.render(React.createElement(UserProfileCard, userData));
+```
+---
+## 🤓 Now It is convert to:
+
+```js
+// UserProfileCard component using JSX (This is what you typically write)
+const UserProfileCard = (props) => {
+  return (
+    <div className="user-profile-card">
+      <img
+        src={props.imageUrl}
+        alt={props.name}
+        className="profile-image"
+      />
+      <h2 className="user-name">{props.name}</h2>
+      <p className="user-title">{props.title}</p>
+      <button
+        className="contact-button"
+        onClick={() => alert(`Contacting ${props.name}!`)}
+      >
+        Contact
+      </button>
+    </div>
+  );
+};
+
+// Example usage:
+// const userData = {
+//   name: "Sara Karimi",
+//   title: "Product Manager",
+//   imageUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=SK",
+// };
+// const container = document.getElementById("root");
+// const root = ReactDOM.createRoot(container);
+// root.render(<UserProfileCard {...userData} />);
 ```
