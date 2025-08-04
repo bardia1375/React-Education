@@ -139,4 +139,46 @@ const App = () => {
 ```
 
 ---
+// UserProfileCard component using React.createElement
+const UserProfileCard = (props) => {
+  return React.createElement(
+    "div", // The main div element
+    { className: "user-profile-card" }, // CSS class for styling
+    React.createElement(
+      "img", // Image element
+      {
+        src: props.imageUrl, // Image source from props
+        alt: props.name, // Alt text for accessibility
+        className: "profile-image", // CSS class
+      }
+    ),
+    React.createElement(
+      "h2", // Heading for the name
+      { className: "user-name" }, // CSS class
+      props.name // User's name from props
+    ),
+    React.createElement(
+      "p", // Paragraph for the job title
+      { className: "user-title" }, // CSS class
+      props.title // Job title from props
+    ),
+    React.createElement(
+      "button", // Button element
+      {
+        className: "contact-button", // CSS class
+        onClick: () => alert(`Contacting ${props.name}!`), // Click event handler
+      },
+      "Contact" // Text inside the button
+    )
+  );
+};
 
+// Example usage:
+// const userData = {
+//   name: "Ali Ahmadi",
+//   title: "Software Engineer",
+//   imageUrl: "https://via.placeholder.com/150",
+// };
+// const container = document.getElementById("root");
+// const root = ReactDOM.createRoot(container);
+// root.render(React.createElement(UserProfileCard, userData));
