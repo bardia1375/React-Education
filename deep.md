@@ -186,3 +186,24 @@ const UserProfileCard = (props) => {
 ```
 
 ---
+```js
+// Example data for the user profile
+const userData = {
+  name: "Ali Ahmadi",
+  title: "Software Engineer",
+  imageUrl: "https://via.placeholder.com/150", // Placeholder image URL
+};
+
+// 1. Get the DOM element where the React app will be mounted.
+//    This assumes you have an HTML element like <div id="root"></div> in your index.html.
+const container = document.getElementById("root");
+
+// 2. Create a React root. This is the entry point for your React application.
+//    ReactDOM.createRoot is the modern way to initialize a React app.
+const root = ReactDOM.createRoot(container);
+
+// 3. Render the UserProfileCard component into the root.
+//    Here, we pass the 'userData' object as props to our UserProfileCard component.
+//    React.createElement is used again to create an instance of our component.
+root.render(React.createElement(UserProfileCard, userData));
+```
