@@ -141,6 +141,3 @@ const App = () => {
 
 ---
 
-Let me know if you want this in a CodePen or live demo too! 🍕
-
----
