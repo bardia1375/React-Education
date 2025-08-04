@@ -135,6 +135,53 @@ const App = () => {
       <h1>Pixel Perfect Pizzas</h1>
     </div>
   );
+
+
+
+
+```js
+// UserProfileCard component using React.createElement
+const UserProfileCard = (props) => {
+  // The 'return' statement describes the UI structure for this component.
+  // React.createElement is used to create virtual DOM elements.
+  // Its arguments are: type (e.g., "div", "img"), props (object), children (more elements or text).
+  return React.createElement(
+    "div", // 1. The main wrapper element: an HTML <div>
+    { className: "user-profile-card" }, // Props for the <div>: assigns a CSS class
+    
+    // Children of the main <div>:
+    React.createElement(
+      "img", // 2. An image element: <img>
+      {
+        src: props.imageUrl, // Image source, passed via component props
+        alt: props.name, // Alternative text for the image, also from props
+        className: "profile-image", // CSS class for the image
+      }
+    ),
+    
+    React.createElement(
+      "h2", // 3. A heading element for the user's name: <h2>
+      { className: "user-name" }, // CSS class for the name heading
+      props.name // The actual name text, passed via component props
+    ),
+    
+    React.createElement(
+      "p", // 4. A paragraph element for the user's title: <p>
+      { className: "user-title" }, // CSS class for the title paragraph
+      props.title // The user's title text, passed via component props
+    ),
+    
+    React.createElement(
+      "button", // 5. A button element: <button>
+      {
+        className: "contact-button", // CSS class for the button
+        onClick: () => alert(`Contacting ${props.name}!`), // Event handler for button click
+      },
+      "Contact" // Text displayed inside the button
+    )
+  );
+};
+```
 };
 ```
 
