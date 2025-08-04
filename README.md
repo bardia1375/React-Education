@@ -1,4 +1,6 @@
 
+
+# React-Education
 ````markdown
 # 💥 React vs ReactDOM — Explained Simply (Even a Cow Can Understand 🐄)
 
@@ -120,4 +122,3 @@ That’s why React is split into two libraries:
 🖼️ react-dom = the painter (renders to the web)
 
 
-# React-Education
