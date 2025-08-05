@@ -130,4 +130,4 @@ Hope this helps clarify **why React is considered declarative** — it certainly
 
 ---
 
-اگر خواستی نسخه فارسی یا نسخه مدرن‌تر برای ریپازیتوری خودت بنویسم، خوشحال می‌شم کمکت کنم.
+https://medium.com/@myung.kim287/declarative-vs-imperative-251ce99c6c44
