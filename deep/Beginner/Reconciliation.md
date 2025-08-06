@@ -316,13 +316,9 @@ function ProductPage({ product }) {
 **Result:** Now, when the user changes the product color, only `ProductConfiguration` rerenders. `ReviewsSection` remains completely untouched.
 
 ---
-حتماً! متن شما را به صورت مناسب و قابل فهم برای مستندات GitHub بازنویسی کردم:
+## Using "key" to force reuse of an existing element
 
----
-
-## استفاده از "key" برای اجبار به استفاده مجدد یک عنصر در React
-
-یک نکته جالب: اگر بخواهیم یک عنصر موجود را اجباراً دوباره استفاده کنیم، می‌توانیم از خاصیت **key** کمک بگیریم. به کد زیر توجه کنید که در آن، با تغییر موقعیت عنصر Input در آرایه فرزندان، مشکل را حل کردیم:
+Another fun fact: if we actually needed to reuse an existing element, `key` could help with that as well. Remember this code, where we fixed the bug by rendering the `Input` element in different positions in the children array?
 
 ```jsx
 const Form = () => {
@@ -331,37 +327,38 @@ const Form = () => {
   return (
     <>
       <Checkbox onChange={() => setIsCompany(!isCompany)} />
-      {isCompany ? <Input id="company-tax-id-number" ... /> : null}
-      {!isCompany ? <Input id="person-tax-id-number" ... /> : null}
+      {isCompany ? <Input id="company-tax-id-number" /> : null}
+      {!isCompany ? <Input id="person-tax-id-number" /> : null}
     </>
-  );
-};
+  )
+}
 ```
 
-زمانی که مقدار state متغیر **isCompany** تغییر کند، کامپوننت‌های Input حذف و دوباره ایجاد می‌شوند چون جایگاه‌شان در آرایه تغییر می‌کند. اما اگر به هر دو Input یک مقدار **key** یکسان بدهیم، اتفاق جالبی می‌افتد:
+When the `isCompany` state variable changes, `Input` components will unmount and mount since they are in different positions in the array. But! If I add the `key` attribute to both of those inputs with the same value, the magic happens.
 
 ```jsx
 <>
   <Checkbox onChange={() => setIsCompany(!isCompany)} />
-  {isCompany ? <Input id="company-tax-id-number" key="tax-input" ... /> : null}
-  {!isCompany ? <Input id="person-tax-id-number" key="tax-input" ... /> : null}
+  {isCompany ? <Input id="company-tax-id-number" key="tax-input" /> : null}
+  {!isCompany ? <Input id="person-tax-id-number" key="tax-input" /> : null}
 </>
 ```
 
-از دیدگاه داده و رندر مجدد، وضعیت قبل و بعد به شکل زیر است:
+From the data and re-renders' perspective, it will now be like this.
 
-- قبل (isCompany = false):
+Before, `isCompany` is `false`:
 
-```js
+```jsx
 [
   { type: Checkbox },
   null,
   { type: Input, key: 'tax-input' },
 ];
 ```
-- بعد (isCompany = true):
 
-```js
+After, `isCompany` is `true`:
+
+```jsx
 [
   { type: Checkbox },
   { type: Input, key: "tax-input" },
@@ -369,13 +366,12 @@ const Form = () => {
 ]
 ```
 
-React با دیدن آرایه کودکان قبل و بعد، متوجه می‌شود که یک عنصر با نوع Input و کلید یکسان وجود دارد. پس فکر می‌کند که فقط جای عنصر تغییر کرده و همان instance قبلی را استفاده می‌کند. این یعنی اگر در Input چیزی تایپ کنیم، مقدار آن حفظ می‌شود حتی اگر ظاهر Input از نظر کد متفاوت باشد.
+React sees an array of children and sees that before and after re-renders, there is an element with the `Input` type and the same `key`. So it will think that the `Input` component just changed its position in the array and will **re-use** the already created instance for it. If we type something, the state is preserved even though the `Input`s are technically different.
 
-در این مثال خاص، این رفتار صرفاً جالب است و خیلی کاربرد عملی ندارد. اما می‌توان در بهینه‌سازی عملکرد کامپوننت‌هایی مثل آکاردئون‌ها، تب‌ها یا گالری‌ها از آن استفاده کرد.
-
+For this particular example, it's just a curious behavior, of course, and not very useful in practice. But I could imagine it being used for fine-tuning the performance of components like accordions, tabs content, or some galleries.
 ---
 
-اگر تغییر یا توضیح بیشتری نیاز دارید، بفرمایید!
+
 ---
 
 ### ۱. مثال برای Reconciliation (آشتی)
@@ -691,3 +687,63 @@ function ProductPage({ product }) {
 ```
 
 **نتیجه:** حالا وقتی کاربر رنگ محصول رو عوض می‌کنه، فقط کامپوننت `ProductConfiguration` دوباره رندر میشه. `ReviewsSection` کاملاً ایزوله است و تا زمانی که `productId` عوض نشه، هیچ رندر مجددی نخواهد داشت. این یعنی ما با **معماری بهتر** به بهینگی رسیدیم، نه با ابزارهایی مثل `React.memo`.
+
+
+
+
+## استفاده از "key" برای اجبار به استفاده مجدد یک عنصر در React
+
+یک نکته جالب: اگر بخواهیم یک عنصر موجود را اجباراً دوباره استفاده کنیم، می‌توانیم از خاصیت **key** کمک بگیریم. به کد زیر توجه کنید که در آن، با تغییر موقعیت عنصر Input در آرایه فرزندان، مشکل را حل کردیم:
+
+```jsx
+const Form = () => {
+  const [isCompany, setIsCompany] = useState(false);
+
+  return (
+    <>
+      <Checkbox onChange={() => setIsCompany(!isCompany)} />
+      {isCompany ? <Input id="company-tax-id-number" ... /> : null}
+      {!isCompany ? <Input id="person-tax-id-number" ... /> : null}
+    </>
+  );
+};
+```
+
+زمانی که مقدار state متغیر **isCompany** تغییر کند، کامپوننت‌های Input حذف و دوباره ایجاد می‌شوند چون جایگاه‌شان در آرایه تغییر می‌کند. اما اگر به هر دو Input یک مقدار **key** یکسان بدهیم، اتفاق جالبی می‌افتد:
+
+```jsx
+<>
+  <Checkbox onChange={() => setIsCompany(!isCompany)} />
+  {isCompany ? <Input id="company-tax-id-number" key="tax-input" ... /> : null}
+  {!isCompany ? <Input id="person-tax-id-number" key="tax-input" ... /> : null}
+</>
+```
+
+از دیدگاه داده و رندر مجدد، وضعیت قبل و بعد به شکل زیر است:
+
+- قبل (isCompany = false):
+
+```js
+[
+  { type: Checkbox },
+  null,
+  { type: Input, key: 'tax-input' },
+];
+```
+- بعد (isCompany = true):
+
+```js
+[
+  { type: Checkbox },
+  { type: Input, key: "tax-input" },
+  null
+]
+```
+
+React با دیدن آرایه کودکان قبل و بعد، متوجه می‌شود که یک عنصر با نوع Input و کلید یکسان وجود دارد. پس فکر می‌کند که فقط جای عنصر تغییر کرده و همان instance قبلی را استفاده می‌کند. این یعنی اگر در Input چیزی تایپ کنیم، مقدار آن حفظ می‌شود حتی اگر ظاهر Input از نظر کد متفاوت باشد.
+
+در این مثال خاص، این رفتار صرفاً جالب است و خیلی کاربرد عملی ندارد. اما می‌توان در بهینه‌سازی عملکرد کامپوننت‌هایی مثل آکاردئون‌ها، تب‌ها یا گالری‌ها از آن استفاده کرد.
+
+---
+
+اگر تغییر یا توضیح بیشتری نیاز دارید، بفرمایید!
