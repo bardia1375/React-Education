@@ -317,7 +317,6 @@ function ProductPage({ product }) {
 
 ---
 
-If you need the translation in markdown format or want any changes, let me know!
 ---
 ---
 
