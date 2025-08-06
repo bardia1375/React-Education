@@ -316,8 +316,66 @@ function ProductPage({ product }) {
 **Result:** Now, when the user changes the product color, only `ProductConfiguration` rerenders. `ReviewsSection` remains completely untouched.
 
 ---
+حتماً! متن شما را به صورت مناسب و قابل فهم برای مستندات GitHub بازنویسی کردم:
 
 ---
+
+## استفاده از "key" برای اجبار به استفاده مجدد یک عنصر در React
+
+یک نکته جالب: اگر بخواهیم یک عنصر موجود را اجباراً دوباره استفاده کنیم، می‌توانیم از خاصیت **key** کمک بگیریم. به کد زیر توجه کنید که در آن، با تغییر موقعیت عنصر Input در آرایه فرزندان، مشکل را حل کردیم:
+
+```jsx
+const Form = () => {
+  const [isCompany, setIsCompany] = useState(false);
+
+  return (
+    <>
+      <Checkbox onChange={() => setIsCompany(!isCompany)} />
+      {isCompany ? <Input id="company-tax-id-number" ... /> : null}
+      {!isCompany ? <Input id="person-tax-id-number" ... /> : null}
+    </>
+  );
+};
+```
+
+زمانی که مقدار state متغیر **isCompany** تغییر کند، کامپوننت‌های Input حذف و دوباره ایجاد می‌شوند چون جایگاه‌شان در آرایه تغییر می‌کند. اما اگر به هر دو Input یک مقدار **key** یکسان بدهیم، اتفاق جالبی می‌افتد:
+
+```jsx
+<>
+  <Checkbox onChange={() => setIsCompany(!isCompany)} />
+  {isCompany ? <Input id="company-tax-id-number" key="tax-input" ... /> : null}
+  {!isCompany ? <Input id="person-tax-id-number" key="tax-input" ... /> : null}
+</>
+```
+
+از دیدگاه داده و رندر مجدد، وضعیت قبل و بعد به شکل زیر است:
+
+- قبل (isCompany = false):
+
+```js
+[
+  { type: Checkbox },
+  null,
+  { type: Input, key: 'tax-input' },
+];
+```
+- بعد (isCompany = true):
+
+```js
+[
+  { type: Checkbox },
+  { type: Input, key: "tax-input" },
+  null
+]
+```
+
+React با دیدن آرایه کودکان قبل و بعد، متوجه می‌شود که یک عنصر با نوع Input و کلید یکسان وجود دارد. پس فکر می‌کند که فقط جای عنصر تغییر کرده و همان instance قبلی را استفاده می‌کند. این یعنی اگر در Input چیزی تایپ کنیم، مقدار آن حفظ می‌شود حتی اگر ظاهر Input از نظر کد متفاوت باشد.
+
+در این مثال خاص، این رفتار صرفاً جالب است و خیلی کاربرد عملی ندارد. اما می‌توان در بهینه‌سازی عملکرد کامپوننت‌هایی مثل آکاردئون‌ها، تب‌ها یا گالری‌ها از آن استفاده کرد.
+
+---
+
+اگر تغییر یا توضیح بیشتری نیاز دارید، بفرمایید!
 ---
 
 ### ۱. مثال برای Reconciliation (آشتی)
