@@ -369,7 +369,61 @@ After, `isCompany` is `true`:
 React sees an array of children and sees that before and after re-renders, there is an element with the `Input` type and the same `key`. So it will think that the `Input` component just changed its position in the array and will **re-use** the already created instance for it. If we type something, the state is preserved even though the `Input`s are technically different.
 
 For this particular example, it's just a curious behavior, of course, and not very useful in practice. But I could imagine it being used for fine-tuning the performance of components like accordions, tabs content, or some galleries.
+
 ---
+
+Sure! Here’s your explanation, converted to clear markdown for GitHub documentation:
+
+---
+
+## Why You Shouldn't Define Components Inside Other Components
+
+One final interesting thing about reconciliation is worth mentioning here: we can have a definitive answer to why declaring components inside other components is an **antipattern**.
+
+### Example
+
+When you do this:
+
+```jsx
+const Component = () => {
+  const Input = () => <input />;
+  return <Input />;
+};
+```
+
+If the parent `Component` re-renders for any reason, the `Input` component defined inside will be **re-mounted** on every re-render. This is terrible for performance and can cause many subtle bugs.
+
+### Why Does This Happen?
+
+If we look at this code from the reconciliation and definition object perspective, this is what React sees in `Component`:
+
+```js
+{
+  type: Input,
+}
+```
+
+Just an object with a `type` property pointing to a function. However, that function (`Input`) is created inside `Component`. It’s **local** and will be re-created with every re-render.
+
+So when React tries to compare those types, it will compare two different functions: one before re-render and one after. In JavaScript, you can’t compare functions like this:
+
+```js
+const a = () => {};
+const b = () => {};
+
+a === b; // will always be false
+```
+
+As a result, the "type" of that child will be different on every re-render, so React will remove the previous component and mount the next one. **Hence the re-mount!**
+
+### TL;DR
+
+**Always define your components outside of other components.**  
+Defining them inside causes unnecessary re-mounts, loss of state, and potential bugs.
+
+---
+
+
 
 
 ---
@@ -743,6 +797,42 @@ const Form = () => {
 React با دیدن آرایه کودکان قبل و بعد، متوجه می‌شود که یک عنصر با نوع Input و کلید یکسان وجود دارد. پس فکر می‌کند که فقط جای عنصر تغییر کرده و همان instance قبلی را استفاده می‌کند. این یعنی اگر در Input چیزی تایپ کنیم، مقدار آن حفظ می‌شود حتی اگر ظاهر Input از نظر کد متفاوت باشد.
 
 در این مثال خاص، این رفتار صرفاً جالب است و خیلی کاربرد عملی ندارد. اما می‌توان در بهینه‌سازی عملکرد کامپوننت‌هایی مثل آکاردئون‌ها، تب‌ها یا گالری‌ها از آن استفاده کرد.
+
+---
+وقتی یک کامپوننت را داخل کامپوننت دیگر تعریف می‌کنیم (مثلاً تعریف تابع Input داخل تابع Component)، با هر بار رندر شدن کامپوننت والد، تابع فرزند دوباره ساخته می‌شود. این کار باعث می‌شود که ری‌اکت در هر رندر، کامپوننت فرزند را یک کامپوننت کاملاً جدید بداند و آن را از اول مونت کند (یعنی state و lifecycle آن ریست می‌شود).
+
+مثال:
+
+```jsx
+const Component = () => {
+  const Input = () => <input />;
+
+  return <Input />;
+};
+```
+
+در اینجا، اگر Component دوباره رندر شود، تابع Input دوباره ساخته می‌شود و ری‌اکت فکر می‌کند که نوع کامپوننت عوض شده. چون ری‌اکت نوع کامپوننت را با تابع تعریف‌شده مقایسه می‌کند و هر بار یک تابع جدید داریم:
+
+```js
+const a = () => {};
+const b = () => {};
+a === b; // false
+```
+
+به همین دلیل، هر بار که Component رندر می‌شود، Input قبلی کاملاً حذف و یک Input جدید مونت می‌شود. این کار باعث از دست رفتن state داخلی، اجرا شدن دوباره useEffect و مشکلات عملکردی می‌شود.
+
+راه درست این است که کامپوننت‌ها را خارج از تابع والد تعریف کنیم تا تابعشان همیشه ثابت بماند و ری‌اکت بتواند آن‌ها را به‌درستی تشخیص دهد و state را حفظ کند:
+
+```jsx
+const Input = () => <input />;
+
+const Component = () => {
+  return <Input />;
+};
+```
+
+خلاصه:  
+تعریف کامپوننت داخل کامپوننت دیگر یک آنتی‌پترن است چون باعث می‌شود هر بار کامپوننت فرزند دوباره مونت شود و state و lifecycle آن از بین برود.
 
 ---
 
