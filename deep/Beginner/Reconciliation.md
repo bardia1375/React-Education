@@ -1,4 +1,3 @@
-Certainly! Here is the English translation of your file deep/Beginner/Reconciliation.md:
 
 ---
 
